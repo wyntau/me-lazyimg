@@ -3,7 +3,11 @@ angular.module('me-lazyimg', [])
   function(){
     var uid = 0;
     function getUid(el){
-      return el.__uid || (el.__uid = '' + ++uid);
+        var __uid = el.data("__uid");
+        if (! __uid) {
+            el.data("__uid", (__uid = '' + ++uid));
+        }
+        return __uid;
     }
 
     return {
