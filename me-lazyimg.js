@@ -58,15 +58,27 @@ angular.module('me-lazyimg', [])
         this.addImg = function(iScope, iElement, iAttrs){
           iElement.bind('load', onLoad);
           iScope.$watch('lazySrc', function(){
+            var speed = "1s";
+            if (iScope.animateSpeed != null) {
+                speed = iScope.animateSpeed;
+            }
             if(isVisible(iElement)){
+              if (iScope.animateVisible) {
+                iElement.css({
+                    'background-color': '#fff',
+                    'opacity': 0,
+                    '-webkit-transition': 'opacity ' + speed,
+                    'transition': 'opacity ' + speed
+                });
+              }
               iElement.attr('src', iScope.lazySrc);
             }else{
               var uid = getUid(iElement);
               iElement.css({
                   'background-color': '#fff',
                   'opacity': 0,
-                  '-webkit-transition': 'opacity 1s',
-                  'transition': 'opacity 1s'
+                  '-webkit-transition': 'opacity ' + speed,
+                  'transition': 'opacity ' + speed
               });
               elements[uid] = {
                 iElement: iElement,
@@ -95,7 +107,9 @@ angular.module('me-lazyimg', [])
       restrict: 'A',
       require: '^lazyContainer',
       scope: {
-        lazySrc: '@'
+        lazySrc: '@',
+        animateVisible: '@',
+        animateSpeed: '@'
       },
       link: function(iScope, iElement, iAttrs, containerCtrl){
         containerCtrl.addImg(iScope, iElement, iAttrs);
